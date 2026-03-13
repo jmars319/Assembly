@@ -1,6 +1,6 @@
-# Ledger MVP Hardening + Multi-User Expansion (Phase 0)
+# Assembly by JAMARQ Phase 0 Hardening Plan (Archived)
 
-Purpose: provide a lean, implementable design plan and Prisma schema proposal for approval before Phase 1. This plan preserves the “with you, not for you” principle and keeps all actions human-approved.
+Purpose: provide a lean, implementable design plan and Prisma schema proposal for approval before Phase 1. This document is kept as historical design context; it predates the current stabilized monorepo and should not be treated as the primary source of truth for current setup commands.
 
 ## Decisions (source of truth)
 - Admin is global via `User.isAdmin` (not a workspace role).
@@ -98,7 +98,7 @@ Global hard rule (verbatim): NO EM-DASHES EVER.
 
 ### API Key per Workspace + Usage Caps
 - Workspace can store optional OpenAI key encrypted at rest.
-- Decision: encrypt using a single server secret (e.g. `LEDGER_KMS_KEY`) via node crypto; store `apiKeyCipher` and `apiKeyLast4`.
+- Decision: encrypt using a single server secret (prefer `ASSEMBLY_KMS_KEY`, with `LEDGER_KMS_KEY` accepted as a legacy fallback) via node crypto; store `apiKeyCipher` and `apiKeyLast4`.
 - Default to platform key when workspace key is empty.
 - Usage caps: daily limit and monthly limit fields; enforcement stubbed (tracking table).
 - Usage tracking per workspace and per user; log token count and request count for future billing.
@@ -341,7 +341,7 @@ All queries must scope by workspace.
 - No queries without `workspaceId` unless `User.isAdmin` and explicitly in cross-workspace admin tooling.
 
 ## Migration Approach
-1) Create default workspace: `Ledger Workspace` with slug `default`.
+1) Create default workspace: `Assembly Workspace` with slug `default`.
 2) Create Admin user from existing ADMIN_TOKEN (temporary bootstrap).
 3) Migrate all existing rows to default workspace:
    - Add `workspaceId` with default workspace for all records.
@@ -374,4 +374,4 @@ All queries must scope by workspace.
 - Usage cap units (requests vs token counts).
 - Admin strategy confirmation: global `User.isAdmin` (recommended) vs admin as workspace role.
 - Style system confirmation: include WorkspaceStyle + UserStylePreference in Phase 1.
-- API key encryption approach confirmation: encrypt now with `LEDGER_KMS_KEY` vs defer encryption (not recommended).
+- API key encryption approach confirmation: encrypt now with `ASSEMBLY_KMS_KEY` (with `LEDGER_KMS_KEY` legacy fallback) vs defer encryption (not recommended).

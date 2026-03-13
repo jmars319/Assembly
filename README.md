@@ -1,76 +1,101 @@
-# Ledger (v1 scaffold)
+# Assembly by JAMARQ Monorepo
 
-Ledger is a human-in-the-loop AI Ops panel for turning repo evidence into approved social posts, without losing human authorship. It is intentionally read-only against source repos, and it never posts without explicit approval records. This repo ships a minimal scaffold that keeps boundaries clear while the workflow matures.
+Assembly by JAMARQ is a desktop-first tool for AI-assisted, human-approved content production. This repo keeps the existing web app fully functional while preparing the Tauri desktop client to become the future primary surface.
 
 Start here:
-- `docs/SYSTEM_OVERVIEW.md` (single source of truth)
-- `docs/DEVELOPER_GUIDE.md` (local setup, scripts, DB/migrations)
-- `docs/DEPLOYMENT_GUIDE.md` (Railway)
+- `docs/SYSTEM_OVERVIEW.md`
+- `docs/DEVELOPER_GUIDE.md`
+- `docs/REPO_MAP.md`
+- `docs/STABILITY_CHECKLIST.md`
+- `docs/DESKTOP_ARCHITECTURE.md`
 
-Docs map:
-- `docs/SYSTEM_PUBLIC.md`
-- `docs/SYSTEM_ADMIN.md`
-- `docs/SYSTEM_OPS.md`
-- `docs/PAGESPEED_TRADEOFFS.md`
-- `docs/COPILOT_INSTRUCTIONS_SUMMARY.md`
+## Workspace layout
 
-## How to use (high-level)
-1) Connect repos with the GitHub App and select the allowlist.
-2) Capture evidence from repos or paste notes.
-3) Create briefs from evidence or text prompts.
-4) Draft posts from briefs or Content Ops items.
-5) Approve drafts, then request a schedule proposal.
-6) Track tasks and audit logs for every change.
+```text
+apps/
+  webapp/       Existing Next.js + Prisma implementation
+  desktopapp/   Tauri + Rust + React/Vite shell
 
-## Briefs (DB mode)
-Briefs are short, reusable context blocks that feed post generation. They can be created by AI from repo evidence or from pasted text, then reused across multiple posts.
+packages/
+  shared-types/ Reusable enums, DTOs, presets, and feature keys
+  domain/       Reusable validators, parsers, and audit label mapping
+  prompts/      Shared instruction layering and prompt guidance
+```
 
-Basic flow:
-- Visit `/briefs` to view the list.
-- Generate a new brief via AI (manual trigger) from a repo or pasted text.
-- Open a brief for details or delete it when it is no longer needed.
+What belongs where:
+- `apps/webapp`: current full product behavior, auth, Prisma, API routes, and hosted-web concerns
+- `apps/desktopapp`: desktop shell, Tauri/Rust boundary work, and shared-package consumption
+- `packages/*`: low-risk shared logic that both app targets can consume safely
 
-## Content Ops (DB mode)
-Ledger includes Content Ops for typed content intake with approvals and cadence tracking. This is DB-only in Phase 1.
+## Canonical commands
 
-Supported types (v1):
-- Field Notes
-- Project Notes
-- Systems Memos
-- Blog Features
-- Change Log
-- Decision Records (ADR-lite)
-- Signal Log
+Bootstrap:
 
-Input formats:
-- Field Notes: bullets (Markdown)
-- Project Notes: CSV rows (`case_study_slug,date,metric,detail,source_link`)
-- Systems Memo: Markdown outline or JSON (Thesis/Points/Example/Takeaway)
-- Blog Feature: Markdown with frontmatter (`title`, `primary_keyword`, etc.)
+```bash
+pnpm run bootstrap
+```
 
-AI draft workflow (manual, optional):
-- Go to `/content/new`, pick a type + style preset.
-- Paste base material or upload files (.txt/.md/.csv/.pdf/.docx, 2MB each).
-- Click “Generate draft”, then edit before marking READY/APPROVED.
-- Approved items can be sent to Scheduler for a suggested plan (no auto-posting).
+Daily development:
 
-Commands:
-- `npm run prisma:migrate`
-- `npm run content:seed`
-- `npm run content:smoke`
-- `npm run ai:smoke`
+```bash
+pnpm run dev:web
+pnpm run dev:desktop
+pnpm run dev:both
+```
+
+Verification:
+
+```bash
+pnpm run check:env
+pnpm run check:packages
+pnpm run lint
+pnpm run typecheck
+pnpm run verify:web
+pnpm run verify:desktop
+pnpm run verify:all
+pnpm run doctor
+```
+
+Builds:
+
+```bash
+pnpm run build:web
+pnpm run build:desktop
+pnpm run prisma:generate:web
+pnpm run prisma:validate:web
+```
 
 Notes:
-- No publishing or external writes in this pass.
-- No automatic case study updates.
-- Content can always be saved as DRAFT with warnings.
-- READY/APPROVED status enforces stricter validation gates.
-- Optional AI Assist is manual and requires `OPENAI_API_KEY`.
-- AI instructions always include global hard rules (see `lib/ai/instructionsCore.ts`).
+- `doctor` is the canonical non-interactive repo health command.
+- `lint` covers the JS/TS workspace.
+- `typecheck` covers both apps and all shared packages.
+- `verify:web` and `verify:desktop` are meaningful, target-specific health checks.
 
-Manual QA checklist:
-- Briefs: list loads, AI generate works (or shows missing API key), delete works.
-- Content: Requirements/Paste panels collapsed by default, expand on validation errors.
-- Inbox/Posts: actions are labeled clearly and flow is legible.
-- Audit: human labels shown, technical codes preserved, raw metadata expandable.
-- Dashboard: system overview cards + needs-attention section present.
+## Current product split
+
+- `apps/webapp` remains the fuller implementation today.
+- `apps/desktopapp` is the future-primary client, but is still a shell plus shared-logic consumer.
+- `packages/*` hold the shared core that both targets can reuse now.
+
+When to use each app:
+- Use `webapp` for auth, Prisma-backed flows, API work, and the current end-to-end product.
+- Use `desktopapp` for shell work, Rust/Tauri boundary work, and future local-first ownership.
+
+## Environment and compatibility names
+
+- Canonical env files live at the repo root: `.env` and `.env.local`
+- `apps/webapp` loads repo-root env files explicitly for dev, build, and Prisma commands
+- `desktopapp` currently does not depend on the webapp env loading path
+- Preferred env names now use `ASSEMBLY_*`
+- Legacy `LEDGER_*` names still work where noted for compatibility
+- See `docs/DEVELOPER_GUIDE.md` for the exact compatibility mapping and current setup notes.
+
+## Docs kept on purpose
+
+- `docs/SYSTEM_OVERVIEW.md`: product/system summary and boundaries
+- `docs/DEVELOPER_GUIDE.md`: bootstrap, env, dev, verify, and compatibility names
+- `docs/REPO_MAP.md`: monorepo layout, shared/web-only split, and shim inventory
+- `docs/STABILITY_CHECKLIST.md`: operational checklist before changes, commits, handoff, and release tags
+- `docs/DESKTOP_ARCHITECTURE.md`: local-first and Rust/frontend boundary note
+- `docs/DEPLOYMENT_GUIDE.md`: web deployment notes
+- `docs/PHASE0_MVP_PLAN.md`: archived design context that predates the current stabilized monorepo

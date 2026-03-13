@@ -1,49 +1,54 @@
 # System Overview
 
-Ledger is a human-in-the-loop ops panel for turning repo evidence into approved social posts.
+Assembly by JAMARQ is a human-in-the-loop system for turning repo evidence, editorial context, and internal notes into reviewable content outputs.
 
-Pipeline
-1) Repo allowlist (GitHub App, read-only)
-2) Evidence capture (commits/PRs/releases/docs)
-3) Briefs (human or AI suggested)
-4) Posts (drafts) per platform
-5) Content Ops artifacts (Field Notes, Systems Memos, Blog Features)
-6) Approval gates
-7) Schedules + manual tasks
-8) Audit logging
+## Current product shape
 
-Core boundaries
-- Repo is read-only; Ledger never writes to GitHub.
-- AI proposes; humans approve (no auto-posting).
-- All state transitions are recorded in AuditLog.
+- `apps/webapp` is the fuller implementation today
+- `apps/desktopapp` is the future primary client, but currently a shell
+- `packages/*` hold the low-risk shared logic both targets can reuse now
 
-Key UI routes
+## Operating pipeline
+
+1. Connect repos with the read-only GitHub App and select the allowlist
+2. Capture evidence from repos or paste internal notes
+3. Create briefs from evidence or direct prompts
+4. Draft posts or Content Ops artifacts
+5. Apply human review and approval gates
+6. Propose schedules and track manual tasks
+7. Record state transitions in audit logs
+
+## Core boundaries
+
+- GitHub access is read-only
+- AI proposes; humans approve
+- No auto-posting or silent publishing
+- The webapp remains the authoritative cloud-backed path until desktop local storage and sync are proven
+
+## Key UI routes
+
 - Dashboard: `/dashboard`
-- Inbox: `/inbox`
-- Posts: `/posts/new`, `/posts/:id`, `/posts/archive`
+- Content: `/content`
 - Briefs: `/briefs`
+- Inbox: `/inbox`
 - Schedules: `/schedules`, `/schedules/manage`
-- Tasks: `/tasks`, `/tasks/archive`
+- Tasks: `/tasks`, `/tasks/manage`
 - Settings: `/settings`, `/settings/integrations/github`
 
-Key code anchors
-- Storage switch: `lib/store` (memory/db)
-- Prisma schema: `prisma/schema.prisma`
-- GitHub integration: `lib/github`, `app/api/github/*`
-- AI integration: `lib/ai`, `app/api/ai/*`
-- Auth middleware: `middleware.ts` (admin gate)
+## Key code anchors
 
-Related docs
-- Admin UX: `docs/SYSTEM_ADMIN.md`
-- Ops & runtime: `docs/SYSTEM_OPS.md`
-- Developer setup: `docs/DEVELOPER_GUIDE.md`
-- Deployment: `docs/DEPLOYMENT_GUIDE.md`
+- Shared types: `packages/shared-types`
+- Shared validation/parsing: `packages/domain`
+- Shared prompt composition: `packages/prompts`
+- Web auth/session path: `apps/webapp/lib/auth`, `apps/webapp/proxy.ts`
+- Web database path: `apps/webapp/prisma`, `apps/webapp/lib/prisma.ts`
+- Web GitHub integration: `apps/webapp/lib/github`, `apps/webapp/app/api/github/*`
+- Desktop shell and Rust boundary: `apps/desktopapp/src`, `apps/desktopapp/src-tauri`
 
-Docs map
-- `docs/SYSTEM_PUBLIC.md` — public surface area (if any)
-- `docs/SYSTEM_ADMIN.md` — admin workflows, approvals, UI map
-- `docs/SYSTEM_OPS.md` — runtime, env vars, guardrails
-- `docs/DEPLOYMENT_GUIDE.md` — Railway and prod deployment
-- `docs/DEVELOPER_GUIDE.md` — local setup, scripts, DB, Prisma
-- `docs/PAGESPEED_TRADEOFFS.md` — performance posture
-- `docs/COPILOT_INSTRUCTIONS_SUMMARY.md` — repo rules and constraints
+## Recommended docs
+
+- `docs/DEVELOPER_GUIDE.md` for local setup, env handling, and root commands
+- `docs/REPO_MAP.md` for the monorepo layout, web-only boundaries, and shim inventory
+- `docs/STABILITY_CHECKLIST.md` for pre-change, pre-commit, handoff, and release checks
+- `docs/DESKTOP_ARCHITECTURE.md` for the desktop-first local ownership plan
+- `docs/DEPLOYMENT_GUIDE.md` for web deployment notes
