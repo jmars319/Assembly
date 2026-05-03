@@ -88,7 +88,7 @@ export async function POST(request: Request) {
 
   await Promise.all(
     selectedRepos.map((repo) => {
-      const defaultTag = internalRepoNames.has(repo.fullName.toLowerCase()) ? "ASSEMBLY_INTERNAL" : "JAMARQ";
+      const defaultTag = internalRepoNames.has(repo.fullName.toLowerCase()) ? "ASSEMBLY_INTERNAL" : "tenra";
       return prisma.repoAccess.upsert({
         where: { id: `github-${auth.context.workspaceId}-${repo.repoId}` },
         update: { repo: repo.fullName },

@@ -1,6 +1,6 @@
-# Assembly by JAMARQ Desktop App
+# tenra Assembly Desktop App
 
-Tauri desktop shell for Assembly by JAMARQ. This app currently provides:
+Tauri desktop shell for tenra Assembly. This app currently provides:
 
 - A desktop-first shell layout and placeholder navigation
 - One Rust command roundtrip into the frontend

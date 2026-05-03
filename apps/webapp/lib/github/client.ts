@@ -46,7 +46,7 @@ export const githubAppFetch = async (path: string, init?: RequestInit) => {
       Authorization: `Bearer ${jwt}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
-      "User-Agent": "Assembly by JAMARQ",
+      "User-Agent": "tenra Assembly",
       ...(init?.headers ?? {}),
     },
   });
@@ -80,7 +80,7 @@ export const githubApiFetch = async (
       Authorization: `Bearer ${token}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
-      "User-Agent": "Assembly by JAMARQ",
+      "User-Agent": "tenra Assembly",
       ...(init?.headers ?? {}),
     },
   });

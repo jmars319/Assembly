@@ -19,7 +19,7 @@ fn load_shell_status() -> DesktopShellStatus {
     // - OS keychain / secure enclave for secrets
     // - background tasks and file access through explicit commands
     DesktopShellStatus {
-        product_name: "Assembly by JAMARQ",
+        product_name: "tenra Assembly",
         mode: "desktop-shell",
         storage_strategy: "Local-first is planned; SQLite is the likely first durable store.",
         sync_strategy: "Cloud sync stays deferred until the local model is stable and auditable.",

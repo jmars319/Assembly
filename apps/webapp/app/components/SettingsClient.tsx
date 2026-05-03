@@ -42,8 +42,8 @@ type WorkspaceApiKeyState = {
 
 const defaultInstructions: BrandInstruction[] = [
   {
-    id: "temp-jamarq",
-    tag: "JAMARQ",
+    id: "temp-tenra-assembly",
+    tag: "tenra Assembly",
     tone: "Direct, technical, low-hype.",
     hardRules: "No em dashes. Avoid superlatives.",
     doList: "Use short sentences. Prefer active voice.",
@@ -51,7 +51,7 @@ const defaultInstructions: BrandInstruction[] = [
   },
   {
     id: "temp-tenra",
-    tag: "TENRA",
+    tag: "tenra",
     tone: "Concise, pragmatic, product-led.",
     hardRules: "No em dashes. No hashtags.",
     doList: "Highlight workflow clarity. Keep CTAs gentle.",

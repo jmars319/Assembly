@@ -1,6 +1,6 @@
-# Assembly by JAMARQ Monorepo
+# tenra Assembly Monorepo
 
-Assembly by JAMARQ is a desktop-first tool for AI-assisted, human-approved content production. This repo keeps the existing web app fully functional while preparing the Tauri desktop client to become the future primary surface.
+tenra Assembly is a desktop-first tool for AI-assisted, human-approved content production. This repo keeps the existing web app fully functional while preparing the Tauri desktop client to become the future primary surface.
 
 Start here:
 - `docs/SYSTEM_OVERVIEW.md`

@@ -1,6 +1,6 @@
 # Repo Map
 
-Assembly by JAMARQ is a pnpm monorepo with two app targets and a small shared core.
+tenra Assembly is a pnpm monorepo with two app targets and a small shared core.
 
 ## Top-level folders
 

@@ -5,7 +5,7 @@ import type { RepoAccess } from "@/lib/store/types";
 
 export default function RepoAccessEditor({
   repos,
-  brandOptions = ["JAMARQ", "TENRA"],
+  brandOptions = ["tenra Assembly", "tenra"],
 }: {
   repos: RepoAccess[];
   brandOptions?: string[];

@@ -137,7 +137,7 @@ function App() {
     <div className="shell">
       <aside className="sidebar">
         <div className="brandBlock">
-          <span className="brandTag">Assembly by JAMARQ</span>
+          <span className="brandTag">tenra Assembly</span>
           <h1>Desktop shell</h1>
           <p>Desktop-first shell for the future primary Assembly experience.</p>
         </div>
@@ -242,7 +242,7 @@ function App() {
             <section className="panel detailPanel">
               <div className="panelHeader">
                 <span>Rust boundary</span>
-                <strong>{shellStatus?.productName ?? "Assembly"}</strong>
+                <strong>{shellStatus?.productName ?? "tenra Assembly"}</strong>
               </div>
               <p className="panelCopy">
                 {shellStatus?.syncStrategy ??

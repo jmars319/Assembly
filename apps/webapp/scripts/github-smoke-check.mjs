@@ -82,7 +82,7 @@ try {
           Authorization: `Bearer ${jwt}`,
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
-          "User-Agent": "Assembly by JAMARQ",
+          "User-Agent": "tenra Assembly",
         },
       }
     );

@@ -63,7 +63,7 @@ export default function ProjectsClient({ projects }: Props) {
               value={name}
               onChange={(event) => setName(event.target.value)}
               className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-              placeholder="JAMARQ"
+              placeholder="tenra"
             />
           </label>
           <label className="grid gap-2 text-xs text-slate-400">
@@ -72,7 +72,7 @@ export default function ProjectsClient({ projects }: Props) {
               value={tag}
               onChange={(event) => setTag(event.target.value.toUpperCase())}
               className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-              placeholder="JAMARQ"
+              placeholder="tenra"
             />
           </label>
         </div>

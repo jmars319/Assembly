@@ -1,6 +1,6 @@
 # System Overview
 
-Assembly by JAMARQ is a human-in-the-loop system for turning repo evidence, editorial context, and internal notes into reviewable content outputs.
+tenra Assembly is a human-in-the-loop system for turning repo evidence, editorial context, and internal notes into reviewable content outputs.
 
 ## Current product shape
 

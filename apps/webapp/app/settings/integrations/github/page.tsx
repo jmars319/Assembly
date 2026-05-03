@@ -15,7 +15,7 @@ export default async function GitHubIntegrationPage({
   return (
     <PageShell
       title="GitHub integration"
-      subtitle="Connect the Assembly by JAMARQ GitHub App and select repos."
+      subtitle="Connect the tenra Assembly GitHub App and select repos."
       workspaceName={workspace.name}
       isAdmin={user.isAdmin}
       features={features}

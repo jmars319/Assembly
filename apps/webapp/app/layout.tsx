@@ -15,7 +15,7 @@ const interMono = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Assembly by JAMARQ",
+  title: "tenra Assembly",
   description: "AI-assisted, human-approved content production for internal editorial workflows.",
 };
 

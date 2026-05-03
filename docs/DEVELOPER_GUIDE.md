@@ -1,6 +1,6 @@
 # Developer Guide
 
-Use this guide for day-to-day work in the Assembly by JAMARQ monorepo.
+Use this guide for day-to-day work in the tenra Assembly monorepo.
 
 ## Bootstrap
 
@@ -129,6 +129,6 @@ Verification intent:
 
 ## Related docs
 
-See [docs/REPO_MAP.md](/Users/jason_marshall/JAMARQ/Experiments/Assembly/docs/REPO_MAP.md) for the monorepo layout and shim inventory.
-See [docs/STABILITY_CHECKLIST.md](/Users/jason_marshall/JAMARQ/Experiments/Assembly/docs/STABILITY_CHECKLIST.md) for the operating checklist.
-See [docs/DESKTOP_ARCHITECTURE.md](/Users/jason_marshall/JAMARQ/Experiments/Assembly/docs/DESKTOP_ARCHITECTURE.md) for the desktop-first boundary note.
+See [docs/REPO_MAP.md](REPO_MAP.md) for the monorepo layout and shim inventory.
+See [docs/STABILITY_CHECKLIST.md](STABILITY_CHECKLIST.md) for the operating checklist.
+See [docs/DESKTOP_ARCHITECTURE.md](DESKTOP_ARCHITECTURE.md) for the desktop-first boundary note.

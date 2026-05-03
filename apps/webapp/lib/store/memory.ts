@@ -31,13 +31,13 @@ const seedData = (): MemoryData => {
   const createdAt = nowIso();
   const posts: Post[] = [
     {
-      id: "post-jamarq-li-001",
-      projectId: "project-jamarq",
+      id: "post-tenra-assembly-li-001",
+      projectId: "project-tenra-assembly",
       platform: "LinkedIn",
-      title: "JAMARQ Q1 Launch",
+      title: "tenra Assembly Q1 Launch",
       status: "NEEDS_REVIEW",
       postJson: {
-        headline: "JAMARQ launches Assembly by JAMARQ",
+        headline: "tenra launches tenra Assembly",
         body: "Introducing Assembly for pipeline visibility.",
         cta: "Book a demo",
       },
@@ -46,10 +46,10 @@ const seedData = (): MemoryData => {
       updatedAt: createdAt,
     },
     {
-      id: "post-jamarq-x-001",
-      projectId: "project-jamarq",
+      id: "post-tenra-assembly-x-001",
+      projectId: "project-tenra-assembly",
       platform: "X",
-      title: "JAMARQ Assembly teaser",
+      title: "tenra Assembly teaser",
       status: "NEEDS_REVIEW",
       postJson: {
         text: "Assembly keeps the post pipeline clear: repo -> brief -> posts -> approvals -> schedule.",
@@ -59,8 +59,8 @@ const seedData = (): MemoryData => {
       updatedAt: createdAt,
     },
     {
-      id: "post-jamarq-fb-001",
-      projectId: "project-jamarq",
+      id: "post-tenra-assembly-fb-001",
+      projectId: "project-tenra-assembly",
       platform: "Facebook",
       title: "Assembly v1 announcement",
       status: "NEEDS_REVIEW",
@@ -76,10 +76,10 @@ const seedData = (): MemoryData => {
       id: "post-tenra-li-001",
       projectId: "project-tenra",
       platform: "LinkedIn",
-      title: "TENRA monthly update",
+      title: "tenra monthly update",
       status: "NEEDS_REVIEW",
       postJson: {
-        headline: "TENRA product update",
+        headline: "tenra product update",
         body: "Pipeline visibility and approvals tightened.",
       },
       claims: ["Internal approval flow"],
@@ -90,10 +90,10 @@ const seedData = (): MemoryData => {
       id: "post-tenra-x-001",
       projectId: "project-tenra",
       platform: "X",
-      title: "TENRA schedule note",
+      title: "tenra schedule note",
       status: "NEEDS_REVIEW",
       postJson: {
-        text: "TENRA posts now follow a clear review and schedule path.",
+        text: "tenra posts now follow a clear review and schedule path.",
       },
       claims: ["Schedule path defined"],
       createdAt,
@@ -103,10 +103,10 @@ const seedData = (): MemoryData => {
       id: "post-tenra-fb-001",
       projectId: "project-tenra",
       platform: "Facebook",
-      title: "TENRA ops panel",
+      title: "tenra ops panel",
       status: "NEEDS_REVIEW",
       postJson: {
-        headline: "TENRA ops",
+        headline: "tenra ops",
         body: "Review posts, approve schedules, keep reminders on track.",
       },
       claims: ["Internal review steps"],
@@ -118,7 +118,7 @@ const seedData = (): MemoryData => {
   const schedules: ScheduleProposal[] = [
     {
       id: "schedule-001",
-      projectId: "project-jamarq",
+      projectId: "project-tenra-assembly",
       status: "NEEDS_REVIEW",
       items: posts.map((post) => ({
         id: `item-${post.id}`,
@@ -134,15 +134,15 @@ const seedData = (): MemoryData => {
   const tasks: Task[] = [
     {
       id: "task-001",
-      projectId: "project-jamarq",
+      projectId: "project-tenra-assembly",
       title: "Send LinkedIn post to Legal",
       status: "PENDING",
       dueAt: new Date(Date.now() + 2 * 86400000).toISOString(),
-      copyText: "Please review the JAMARQ LinkedIn post for compliance.",
+      copyText: "Please review the tenra LinkedIn post for compliance.",
     },
     {
       id: "task-002",
-      projectId: "project-jamarq",
+      projectId: "project-tenra-assembly",
       title: "Collect asset approvals",
       status: "PENDING",
       dueAt: new Date(Date.now() + 3 * 86400000).toISOString(),
@@ -154,7 +154,7 @@ const seedData = (): MemoryData => {
       title: "Confirm schedule with PM",
       status: "PENDING",
       dueAt: new Date(Date.now() + 4 * 86400000).toISOString(),
-      copyText: "Confirm TENRA social schedule for next week.",
+      copyText: "Confirm tenra social schedule for next week.",
     },
     {
       id: "task-004",
@@ -162,7 +162,7 @@ const seedData = (): MemoryData => {
       title: "Post reminder email",
       status: "PENDING",
       dueAt: new Date(Date.now() + 5 * 86400000).toISOString(),
-      copyText: "Send a reminder for TENRA content owners.",
+      copyText: "Send a reminder for tenra content owners.",
     },
   ];
 
@@ -170,7 +170,7 @@ const seedData = (): MemoryData => {
     {
       id: "repo-001",
       repo: "jmars319/Assembly",
-      projectTag: "JAMARQ",
+      projectTag: "tenra Assembly",
       enabled: true,
       triggerPosts: true,
       triggerSchedules: true,
@@ -179,7 +179,7 @@ const seedData = (): MemoryData => {
     {
       id: "repo-002",
       repo: "tenra/social-kit",
-      projectTag: "TENRA",
+      projectTag: "tenra",
       enabled: true,
       triggerPosts: true,
       triggerSchedules: false,
@@ -188,14 +188,14 @@ const seedData = (): MemoryData => {
   ];
 
   const projects: Project[] = [
-    { id: "project-jamarq", name: "JAMARQ", tag: "JAMARQ" },
-    { id: "project-tenra", name: "TENRA", tag: "TENRA" },
+    { id: "project-tenra-assembly", name: "tenra Assembly", tag: "tenra Assembly" },
+    { id: "project-tenra", name: "tenra", tag: "tenra" },
   ];
 
   const briefs: Brief[] = [
     {
       id: "brief-001",
-      projectId: "project-jamarq",
+      projectId: "project-tenra-assembly",
       sourceRepoId: undefined,
       summary: "Launch Assembly v1 with clear internal positioning and review steps.",
       createdAt,

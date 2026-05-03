@@ -1,6 +1,6 @@
 # Stability Checklist
 
-Use this as the operating checklist for Assembly by JAMARQ from the repo root.
+Use this as the operating checklist for tenra Assembly from the repo root.
 
 ## Canonical commands
 

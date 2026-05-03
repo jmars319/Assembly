@@ -1,6 +1,6 @@
 # Desktop Architecture Note
 
-Assembly by JAMARQ now ships two apps in the same monorepo because the existing web app is still the complete implementation, while the desktop client is the future primary surface.
+tenra Assembly now ships two apps in the same monorepo because the existing web app is still the complete implementation, while the desktop client is the future primary surface.
 
 ## What remains web-only today
 
