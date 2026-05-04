@@ -22,7 +22,7 @@ struct DesktopShellStatus {
 
 #[tauri::command]
 fn load_shell_status() -> DesktopShellStatus {
-    // Placeholder command boundary for the future desktop-first stack.
+    // Desktop command boundary for local services.
     // Local persistence should move behind Rust-owned services:
     // - SQLite for durable local state
     // - OS keychain / secure enclave for secrets

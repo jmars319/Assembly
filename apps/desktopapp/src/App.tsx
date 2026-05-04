@@ -26,7 +26,7 @@ const formatEnumLabel = (value: string) =>
 
 const fieldNotePromotionIssues = getPromotionIssuesForItem({
   type: "FIELD_NOTE",
-  rawInput: "- Desktop shell scaffolded\n- Shared packages extracted",
+  rawInput: "- Desktop workspace prepared\n- Shared packages extracted",
 });
 
 const sectionCopy: Record<
@@ -42,7 +42,7 @@ const sectionCopy: Record<
     eyebrow: "Desktop-first foundation",
     title: "Assembly is ready to grow past the browser without abandoning the web app.",
     description:
-      "The desktop client starts as a shell and shared-logic consumer. The existing web app remains the full implementation while local-first infrastructure lands behind Rust commands.",
+      "The desktop client now shares the core content model while the existing web app remains the full implementation.",
     focusItems: [
       "Use the current web app as the functional reference implementation.",
       "Keep approvals and editorial review flows in the frontend.",
@@ -53,7 +53,7 @@ const sectionCopy: Record<
     eyebrow: "Shared content model",
     title: "Content intake and promotion rules can already be reused outside Next.js.",
     description:
-      "The desktop shell reads shared content types and validators directly from workspace packages, which keeps future form migrations calm and explicit.",
+      "The desktop workspace reads shared content types and validators directly from workspace packages.",
     focusItems: [
       "Content types come from @assembly/shared-types.",
       "Promotion checks come from @assembly/domain.",
@@ -64,7 +64,7 @@ const sectionCopy: Record<
     eyebrow: "Brief flow",
     title: "Briefs stay human-approved and reusable as context blocks.",
     description:
-      "Desktop does not port the full brief generation flow yet. It establishes the screen boundary where repo evidence, prompt composition, and review will eventually converge.",
+      "Desktop marks the screen boundary where repo evidence, prompt composition, and review will converge.",
     focusItems: [
       "Prompt layering already lives in @assembly/prompts.",
       "Repo evidence capture remains web-only for now.",
@@ -138,8 +138,8 @@ function App() {
       <aside className="sidebar">
         <div className="brandBlock">
           <span className="brandTag">tenra Assembly</span>
-          <h1>Desktop shell</h1>
-          <p>Desktop-first shell for the future primary Assembly experience.</p>
+          <h1>Desktop workspace</h1>
+          <p>Desktop-first workspace for the primary Assembly experience.</p>
         </div>
 
         <nav className="navList" aria-label="Primary">
@@ -171,7 +171,7 @@ function App() {
           </div>
 
           <div className="statusCard">
-            <span className="statusLabel">Tauri command roundtrip</span>
+            <span className="statusLabel">Desktop status</span>
             <strong>{shellStatus?.productName ?? "Loading shell status..."}</strong>
             <p>{shellError ?? shellStatus?.storageStrategy ?? "Waiting for Rust state..."}</p>
             <span className="statusPill">{shellStatus?.mode ?? "pending"}</span>
@@ -213,7 +213,7 @@ function App() {
                   <strong>{fieldNotePromotionIssues.length} strict issue(s)</strong>
                 </div>
                 <p className="panelCopy">
-                  The desktop shell is already reading the shared validation package. This sample field note is still
+                  The desktop workspace is reading the shared validation package. This sample field note is still
                   missing one bullet before READY/APPROVED.
                 </p>
                 <ul className="issueList">
@@ -241,7 +241,7 @@ function App() {
           <aside className="detailColumn">
             <section className="panel detailPanel">
               <div className="panelHeader">
-                <span>Rust boundary</span>
+                <span>Local services</span>
                 <strong>{shellStatus?.productName ?? "tenra Assembly"}</strong>
               </div>
               <p className="panelCopy">
