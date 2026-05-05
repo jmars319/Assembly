@@ -143,7 +143,7 @@ export default function NewPostClient({ briefs, repos, aiConfigured }: Props) {
       return;
     }
     if (!aiConfigured) {
-      setError("OPENAI_API_KEY is not configured.");
+      setError("AI provider is not configured.");
       setState("error");
       return;
     }

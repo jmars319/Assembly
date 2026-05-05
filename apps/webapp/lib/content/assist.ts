@@ -1,6 +1,5 @@
 import "server-only";
-import type OpenAI from "openai";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
 import type { ContentItem } from "@prisma/client";
 
@@ -10,7 +9,7 @@ export const assistContentItem = async (
   item: ContentItem,
   mode: AssistMode,
   instructionContext?: InstructionContext,
-  openai?: OpenAI,
+  openai?: AssemblyAiClient,
 ) => {
   const instructionBlock = buildInstructionBlock(
     instructionContext ?? {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireApiContext } from "@/lib/auth/api";
+import { hasAssemblyAiProvider } from "@/lib/ai/client";
 import { getPrismaClient } from "@/lib/prisma";
 
 export async function GET() {
@@ -10,7 +11,7 @@ export async function GET() {
   const workspaceKey = await prisma.workspaceApiKey.findUnique({
     where: { workspaceId: context.workspaceId },
   });
-  const configured = Boolean(process.env.OPENAI_API_KEY) || Boolean(workspaceKey?.apiKeyCipher);
+  const configured = hasAssemblyAiProvider(Boolean(workspaceKey?.apiKeyCipher));
   return NextResponse.json({
     configured,
     workspaceConfigured: Boolean(workspaceKey?.apiKeyCipher),

@@ -3,22 +3,25 @@ import { getPrismaClient } from "@/lib/prisma";
 import { assistContentItem } from "@/lib/content/assist";
 import { requireApiContext } from "@/lib/auth/api";
 import { resolveInstructionContext } from "@/lib/ai/instructions";
-import { getOpenAIForWorkspace } from "@/lib/ai/client";
+import { getOpenAIForWorkspace, hasAssemblyAiProvider } from "@/lib/ai/client";
 import { getAuditLabel } from "@/lib/audit/labels";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: Params) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    const auth = await requireApiContext("AI_CONTENT_ASSIST");
+    if (!auth.ok) return auth.response;
+    const prisma = getPrismaClient();
+    const workspaceKey = await prisma.workspaceApiKey.findUnique({
+      where: { workspaceId: auth.context.workspaceId },
+    });
+    if (!hasAssemblyAiProvider(Boolean(workspaceKey?.apiKeyCipher))) {
       return NextResponse.json(
-        { ok: false, validation: { ok: false, errors: [{ code: "ai_missing", message: "AI assist not configured.", hint: "Set OPENAI_API_KEY to enable." }], warnings: [] } },
+        { ok: false, validation: { ok: false, errors: [{ code: "ai_missing", message: "AI assist not configured.", hint: "Set OPENAI_API_KEY, OPENAI_BASE_URL, or ASSEMBLY_LOCAL_AI_BASE_URL to enable." }], warnings: [] } },
         { status: 400 },
       );
     }
-
-    const auth = await requireApiContext("AI_CONTENT_ASSIST");
-    if (!auth.ok) return auth.response;
 
     const resolved = await params;
     const body = await request.json();
@@ -32,7 +35,6 @@ export async function POST(request: Request, { params }: Params) {
       );
     }
 
-    const prisma = getPrismaClient();
     const item = await prisma.contentItem.findFirst({
       where: { id: resolved.id, workspaceId: auth.context.workspaceId },
     });

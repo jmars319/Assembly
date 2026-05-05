@@ -1,6 +1,5 @@
 import "server-only";
-import type OpenAI from "openai";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
 
 export type ScheduleSuggestion = {
@@ -14,7 +13,7 @@ export const generateScheduleProposal = async (input: {
   postText: string;
   platform: string;
   instructionContext?: InstructionContext;
-  openai?: OpenAI;
+  openai?: AssemblyAiClient;
 }): Promise<ScheduleSuggestion> => {
   const postText = input.postText.trim();
   if (!postText) {

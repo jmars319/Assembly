@@ -1,6 +1,7 @@
 import PageShell from "@/app/components/PageShell";
 import PurposeCard from "@/app/components/PurposeCard";
 import NewPostClient from "@/app/posts/new/NewPostClient";
+import { hasAssemblyAiProvider } from "@/lib/ai/client";
 import { getStore } from "@/lib/store";
 import { requireWorkspaceContext } from "@/lib/workspace/context";
 import { getPrismaClient } from "@/lib/prisma";
@@ -13,7 +14,7 @@ export default async function NewPostPage() {
   const workspaceKey = await prisma.workspaceApiKey.findUnique({
     where: { workspaceId: workspace.id },
   });
-  const aiConfigured = Boolean(process.env.OPENAI_API_KEY) || Boolean(workspaceKey?.apiKeyCipher);
+  const aiConfigured = hasAssemblyAiProvider(Boolean(workspaceKey?.apiKeyCipher));
 
   return (
     <PageShell

@@ -3,6 +3,7 @@ import PurposeCard from "@/app/components/PurposeCard";
 import SettingsAIIntegrationSummary from "@/app/components/SettingsAIIntegrationSummary";
 import SettingsClient from "@/app/components/SettingsClient";
 import SettingsGitHubSummary from "@/app/components/SettingsGitHubSummary";
+import { hasAssemblyAiProvider } from "@/lib/ai/client";
 import { getStore } from "@/lib/store";
 import { requireWorkspaceContext } from "@/lib/workspace/context";
 import { getPrismaClient } from "@/lib/prisma";
@@ -20,7 +21,7 @@ export default async function SettingsPage({
   const workspaceKey = await prisma.workspaceApiKey.findUnique({
     where: { workspaceId: workspace.id },
   });
-  const aiConfigured = Boolean(process.env.OPENAI_API_KEY) || Boolean(workspaceKey?.apiKeyCipher);
+  const aiConfigured = hasAssemblyAiProvider(Boolean(workspaceKey?.apiKeyCipher));
 
   return (
     <PageShell

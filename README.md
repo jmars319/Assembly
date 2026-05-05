@@ -77,6 +77,24 @@ Notes:
 - `apps/desktopapp` is a usable local desktop workbench for manual content items, review gates, approvals, and Markdown export.
 - `packages/*` hold the shared core that both targets can reuse now.
 
+## Local AI Provider
+
+Assembly can now run AI draft/assist flows against a local model server instead
+of requiring OpenAI. The current local path uses Ollama's native `/api/generate`
+endpoint:
+
+```bash
+ASSEMBLY_LOCAL_AI_PROVIDER=ollama
+ASSEMBLY_LOCAL_AI_BASE_URL=http://127.0.0.1:11434
+ASSEMBLY_LOCAL_AI_MODEL=llama3.2
+```
+
+`OPENAI_API_KEY` and workspace API keys still work. For an OpenAI-compatible
+local server, set `ASSEMBLY_LOCAL_AI_PROVIDER=openai-compatible` and point
+`ASSEMBLY_LOCAL_AI_BASE_URL` at the local `/v1` endpoint. `OPENAI_BASE_URL`
+also remains supported. The local model still has to be running; Assembly does
+not bundle model weights.
+
 When to use each app:
 - Use `webapp` for auth, Prisma-backed flows, API work, and the current end-to-end product.
 - Use `desktopapp` for local drafting, reusable content templates, validation, approval state, export, Rust/Tauri boundary work, and future local-first ownership.

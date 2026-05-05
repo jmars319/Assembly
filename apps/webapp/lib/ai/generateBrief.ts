@@ -1,6 +1,5 @@
 import "server-only";
-import type OpenAI from "openai";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import type { StylePreset } from "@/lib/content/stylePresets";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
 
@@ -35,7 +34,7 @@ export async function generateBrief(input: {
     dontList?: string;
   };
   instructionContext?: InstructionContext;
-  openai?: OpenAI;
+  openai?: AssemblyAiClient;
 }): Promise<string> {
   if (!input.items.length) {
     throw new Error("No evidence items provided.");

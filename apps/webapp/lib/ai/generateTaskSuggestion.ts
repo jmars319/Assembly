@@ -1,6 +1,5 @@
 import "server-only";
-import type OpenAI from "openai";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
 
 export type TaskSuggestion = {
@@ -13,7 +12,7 @@ export const generateTaskSuggestion = async (input: {
   promptText: string;
   projectName?: string;
   instructionContext?: InstructionContext;
-  openai?: OpenAI;
+  openai?: AssemblyAiClient;
 }): Promise<TaskSuggestion> => {
   const promptText = input.promptText.trim();
   if (!promptText) {

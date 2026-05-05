@@ -1,7 +1,6 @@
 import "server-only";
-import type OpenAI from "openai";
 import { platformPromptInstructions } from "@assembly/prompts/post";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import type { StylePreset } from "@/lib/content/stylePresets";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
 
@@ -38,7 +37,7 @@ type PostInput = {
   };
   stylePreset?: StylePreset;
   instructionContext?: InstructionContext;
-  openai?: OpenAI;
+  openai?: AssemblyAiClient;
 };
 
 const truncateText = (value: string, limit: number) =>

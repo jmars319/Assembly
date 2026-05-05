@@ -3,7 +3,7 @@ import { getPrismaClient } from "@/lib/prisma";
 import { generateBrief } from "@/lib/ai/generateBrief";
 import { requireApiContext } from "@/lib/auth/api";
 import { resolveInstructionContext, resolveStylePresetId } from "@/lib/ai/instructions";
-import { getOpenAIForWorkspace } from "@/lib/ai/client";
+import { getOpenAIForWorkspace, hasAssemblyAiProvider } from "@/lib/ai/client";
 
 export async function POST(request: Request) {
   if (process.env.STORAGE_MODE !== "db") {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const workspaceKey = await prisma.workspaceApiKey.findUnique({
     where: { workspaceId: context.workspaceId },
   });
-  const aiConfigured = Boolean(process.env.OPENAI_API_KEY) || Boolean(workspaceKey?.apiKeyCipher);
+  const aiConfigured = hasAssemblyAiProvider(Boolean(workspaceKey?.apiKeyCipher));
   if (!aiConfigured) {
     return NextResponse.json({ error: "AI assist not configured." }, { status: 400 });
   }

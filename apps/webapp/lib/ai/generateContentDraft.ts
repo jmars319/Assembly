@@ -1,7 +1,6 @@
 import "server-only";
-import type OpenAI from "openai";
 import { contentDraftTypeGuidance } from "@assembly/prompts/content";
-import { getOpenAI } from "@/lib/ai/client";
+import { getOpenAI, type AssemblyAiClient } from "@/lib/ai/client";
 import type { ContentType } from "@/lib/content/types";
 import type { StylePreset } from "@/lib/content/stylePresets";
 import { buildInstructionBlock, type InstructionContext } from "@/lib/ai/instructions";
@@ -23,7 +22,7 @@ export const generateContentDraft = async (input: {
   stylePreset: StylePreset;
   sourceText: string;
   instructionContext?: InstructionContext;
-  openai?: OpenAI;
+  openai?: AssemblyAiClient;
 }) => {
   const sourceText = input.sourceText.trim();
   if (!sourceText) {
