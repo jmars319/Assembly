@@ -1,6 +1,7 @@
 import PageShell from "@/app/components/PageShell";
 import { listContentItems } from "@/lib/content/service";
 import { requireWorkspaceContext } from "@/lib/workspace/context";
+import RegistryHandoffInbox from "./RegistryHandoffInbox";
 
 export default async function ProjectNotesPage({
   searchParams,
@@ -61,6 +62,7 @@ export default async function ProjectNotesPage({
       features={features}
     >
       <div className="space-y-6">
+        <RegistryHandoffInbox />
         {Object.entries(grouped).length === 0 ? (
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-sm text-slate-300">
             No project notes yet.
