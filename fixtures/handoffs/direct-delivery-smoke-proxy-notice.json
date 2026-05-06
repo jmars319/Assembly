@@ -1,0 +1,26 @@
+{
+  "schema": "tenra-assembly.proxy-notice-handoff.v1",
+  "exportedAt": "2026-05-06T18:30:00.000Z",
+  "sourceApp": "assembly",
+  "contentItemId": "content_direct_delivery_smoke",
+  "title": "Direct delivery smoke notice",
+  "draftText": "Assembly received a Scout opportunity and is smoke-testing direct Proxy shaping.",
+  "proxyShapeRequest": {
+    "clientApp": "assembly",
+    "surface": "internal-note",
+    "profileId": "profile:default",
+    "purpose": "Smoke-test Assembly direct delivery to Proxy.",
+    "draftText": "Assembly received a Scout opportunity and is smoke-testing direct Proxy shaping.",
+    "audience": "content operator",
+    "sourceArtifact": {
+      "schema": "tenra-scout.opportunity-handoff.v1",
+      "artifactId": "run_direct_delivery_smoke:candidate_direct_delivery",
+      "exportedAt": "2026-05-06T18:30:00.000Z"
+    },
+    "hardConstraints": [
+      "Do not publish directly",
+      "Keep Scout source context visible"
+    ],
+    "traceId": "suite-direct-delivery-smoke"
+  }
+}

@@ -27,6 +27,7 @@ export default function RegistryHandoffInbox() {
   const [warnings, setWarnings] = useState<ValidationIssue[]>([]);
   const [stage, setStage] = useState<HandoffStage>("idle");
   const [proxyHandoffJson, setProxyHandoffJson] = useState("");
+  const [proxyDelivery, setProxyDelivery] = useState("");
 
   const importRegistryRequest = async () => {
     setBusy(true);
@@ -88,21 +89,35 @@ export default function RegistryHandoffInbox() {
     }
   };
 
-  const exportProxyHandoff = async () => {
+  const exportProxyHandoff = async (deliver = false) => {
     if (!created?.id) return;
     setBusy(true);
     try {
       const response = await fetch("/api/handoffs/proxy-notice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contentItemId: created.id }),
+        body: JSON.stringify({ contentItemId: created.id, deliver }),
       });
-      const data = (await response.json()) as { ok?: boolean; handoff?: unknown; error?: string };
+      const data = (await response.json()) as {
+        ok?: boolean;
+        delivered?: boolean;
+        deliveryMode?: string;
+        handoff?: unknown;
+        proxy?: unknown;
+        error?: string;
+      };
       if (!response.ok || !data.ok || !data.handoff) {
         setErrors([{ code: "proxy_handoff_failed", message: data.error ?? "Proxy handoff export failed." }]);
         return;
       }
       setProxyHandoffJson(JSON.stringify(data.handoff, null, 2));
+      setProxyDelivery(
+        deliver
+          ? data.delivered
+            ? "Proxy shaped output was posted back to this draft."
+            : data.error ?? "Proxy endpoint is not configured; JSON fallback is shown."
+          : "Proxy handoff JSON exported for manual delivery.",
+      );
       setStage("exported");
     } finally {
       setBusy(false);
@@ -159,14 +174,23 @@ export default function RegistryHandoffInbox() {
             <button
               className="rounded-full border border-emerald-800 px-3 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60"
               disabled={busy || (stage !== "reviewed" && stage !== "exported")}
-              onClick={() => void exportProxyHandoff()}
+              onClick={() => void exportProxyHandoff(false)}
               type="button"
             >
               Export Proxy handoff
             </button>
+            <button
+              className="rounded-full border border-emerald-800 px-3 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={busy || (stage !== "reviewed" && stage !== "exported")}
+              onClick={() => void exportProxyHandoff(true)}
+              type="button"
+            >
+              Send Proxy
+            </button>
           </div>
         </div>
       ) : null}
+      {proxyDelivery ? <p className="mt-3 text-sm text-slate-300">{proxyDelivery}</p> : null}
       {proxyHandoffJson ? (
         <pre className="mt-3 max-h-80 overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs text-slate-200">
           {proxyHandoffJson}
