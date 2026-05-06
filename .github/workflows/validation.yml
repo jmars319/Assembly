@@ -20,5 +20,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Validate handoff fixtures
         run: pnpm run verify:handoffs
+      - name: Generate Prisma Client
+        run: pnpm --filter webapp prisma:generate
       - name: Run typecheck
         run: pnpm run typecheck
