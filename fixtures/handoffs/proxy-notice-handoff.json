@@ -1,0 +1,27 @@
+{
+  "schema": "tenra-assembly.proxy-notice-handoff.v1",
+  "exportedAt": "2026-05-06T18:00:00.000Z",
+  "sourceApp": "assembly",
+  "contentItemId": "content_demo_registry_notice",
+  "title": "Past due notice for Acme Builders",
+  "draftText": "# Past due notice for Acme Builders\n\nRegistry source remains attached for operator review.",
+  "sourceRegistryExportId": "registry-assembly-demo-cust-001",
+  "proxyShapeRequest": {
+    "clientApp": "assembly",
+    "surface": "internal-note",
+    "profileId": "profile:default",
+    "purpose": "Shape a Registry-backed Assembly notice before customer-facing review.",
+    "draftText": "# Past due notice for Acme Builders\n\nRegistry source remains attached for operator review.",
+    "audience": "content operator",
+    "sourceArtifact": {
+      "schema": "tenra-registry.assembly-document-request.v1",
+      "artifactId": "registry-assembly-demo-cust-001",
+      "exportedAt": "2026-05-06T17:30:00.000Z"
+    },
+    "hardConstraints": [
+      "Do not publish directly",
+      "Keep Registry source context visible"
+    ],
+    "traceId": "assembly-proxy-content-demo-registry-notice"
+  }
+}

@@ -16,7 +16,7 @@ export function registryDocumentRequestToProjectNote(input: unknown): {
     detail: `${request.desiredOutput} requested for ${request.documentType}. Customer ${request.customerId}${
       request.assignmentId ? `, assignment ${request.assignmentId}` : ""
     }.`,
-    sourceLink: null
+    sourceLink: `registry-handoff:${request.exportId}`
   };
 
   return {
@@ -27,6 +27,7 @@ export function registryDocumentRequestToProjectNote(input: unknown): {
       `# ${request.title}`,
       "",
       `Source schema: ${request.schema}`,
+      `Registry export ID: ${request.exportId}`,
       `Desired output: ${request.desiredOutput}`,
       `Document type: ${request.documentType}`,
       `Customer: ${request.customerId}`,

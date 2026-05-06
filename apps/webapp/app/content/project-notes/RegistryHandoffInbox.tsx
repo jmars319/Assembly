@@ -17,12 +17,16 @@ type ImportResponse = {
   };
 };
 
+type HandoffStage = "idle" | "imported" | "drafted" | "reviewed" | "exported";
+
 export default function RegistryHandoffInbox() {
   const [payload, setPayload] = useState("");
   const [busy, setBusy] = useState(false);
   const [created, setCreated] = useState<ImportResponse["item"] | null>(null);
   const [errors, setErrors] = useState<ValidationIssue[]>([]);
   const [warnings, setWarnings] = useState<ValidationIssue[]>([]);
+  const [stage, setStage] = useState<HandoffStage>("idle");
+  const [proxyHandoffJson, setProxyHandoffJson] = useState("");
 
   const importRegistryRequest = async () => {
     setBusy(true);
@@ -35,8 +39,10 @@ export default function RegistryHandoffInbox() {
         body = JSON.parse(payload);
       } catch {
         setErrors([{ code: "registry_json_invalid", message: "Registry handoff JSON could not be parsed." }]);
+        setStage("idle");
         return;
       }
+      setStage("imported");
 
       const response = await fetch("/api/handoffs/registry-document", {
         method: "POST",
@@ -54,6 +60,50 @@ export default function RegistryHandoffInbox() {
       setCreated(data.item ?? null);
       setWarnings(data.validation?.warnings ?? []);
       setPayload("");
+      setStage("drafted");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const markReviewed = async () => {
+    if (!created?.id) return;
+    setBusy(true);
+    try {
+      const response = await fetch(`/api/content/items/${encodeURIComponent(created.id)}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "READY", note: "Registry handoff reviewed for Proxy export." }),
+      });
+      const data = (await response.json()) as ImportResponse;
+      if (!response.ok || !data.ok) {
+        setErrors(data.validation?.errors ?? [{ code: "registry_review_failed", message: "Review status failed." }]);
+        setWarnings(data.validation?.warnings ?? []);
+        return;
+      }
+      setCreated(data.item ?? created);
+      setStage("reviewed");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const exportProxyHandoff = async () => {
+    if (!created?.id) return;
+    setBusy(true);
+    try {
+      const response = await fetch("/api/handoffs/proxy-notice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contentItemId: created.id }),
+      });
+      const data = (await response.json()) as { ok?: boolean; handoff?: unknown; error?: string };
+      if (!response.ok || !data.ok || !data.handoff) {
+        setErrors([{ code: "proxy_handoff_failed", message: data.error ?? "Proxy handoff export failed." }]);
+        return;
+      }
+      setProxyHandoffJson(JSON.stringify(data.handoff, null, 2));
+      setStage("exported");
     } finally {
       setBusy(false);
     }
@@ -74,6 +124,20 @@ export default function RegistryHandoffInbox() {
           {busy ? "Importing" : "Create draft"}
         </button>
       </div>
+      <div className="mt-4 grid gap-2 text-xs text-slate-400 md:grid-cols-4">
+        {(["imported", "drafted", "reviewed", "exported"] as const).map((step) => (
+          <span
+            className={`rounded border px-3 py-2 ${
+              stage === step || (step === "imported" && stage !== "idle")
+                ? "border-emerald-900 bg-emerald-950/40 text-emerald-100"
+                : "border-slate-800 bg-slate-950"
+            }`}
+            key={step}
+          >
+            {step}
+          </span>
+        ))}
+      </div>
       <textarea
         className="mt-4 min-h-40 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 font-mono text-sm text-slate-200"
         value={payload}
@@ -83,7 +147,30 @@ export default function RegistryHandoffInbox() {
       {created ? (
         <div className="mt-3 rounded-lg border border-emerald-900 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-100">
           Draft created: {created.title ?? created.id} ({created.status ?? "DRAFT"})
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              className="rounded-full border border-emerald-800 px-3 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={busy || stage === "reviewed" || stage === "exported"}
+              onClick={() => void markReviewed()}
+              type="button"
+            >
+              Mark reviewed
+            </button>
+            <button
+              className="rounded-full border border-emerald-800 px-3 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={busy || (stage !== "reviewed" && stage !== "exported")}
+              onClick={() => void exportProxyHandoff()}
+              type="button"
+            >
+              Export Proxy handoff
+            </button>
+          </div>
         </div>
+      ) : null}
+      {proxyHandoffJson ? (
+        <pre className="mt-3 max-h-80 overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs text-slate-200">
+          {proxyHandoffJson}
+        </pre>
       ) : null}
       {errors.length ? (
         <div className="mt-3 space-y-2 rounded-lg border border-rose-950 bg-rose-950/40 px-3 py-2">

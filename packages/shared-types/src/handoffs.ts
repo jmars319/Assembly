@@ -1,5 +1,6 @@
 export interface RegistryAssemblyDocumentRequest {
   schema: "tenra-registry.assembly-document-request.v1";
+  exportId: string;
   exportedAt: string;
   sourceApp: "registry";
   organizationId: string;
@@ -22,6 +23,7 @@ export function parseRegistryAssemblyDocumentRequest(input: unknown): RegistryAs
     candidate.schema !== "tenra-registry.assembly-document-request.v1" ||
     candidate.sourceApp !== "registry" ||
     typeof candidate.exportedAt !== "string" ||
+    typeof candidate.exportId !== "string" ||
     typeof candidate.organizationId !== "string" ||
     typeof candidate.customerId !== "string" ||
     typeof candidate.documentType !== "string" ||
@@ -34,6 +36,7 @@ export function parseRegistryAssemblyDocumentRequest(input: unknown): RegistryAs
 
   return {
     schema: "tenra-registry.assembly-document-request.v1",
+    exportId: candidate.exportId,
     exportedAt: candidate.exportedAt,
     sourceApp: "registry",
     organizationId: candidate.organizationId,
@@ -43,6 +46,31 @@ export function parseRegistryAssemblyDocumentRequest(input: unknown): RegistryAs
     title: candidate.title,
     contextMarkdown: candidate.contextMarkdown,
     desiredOutput
+  };
+}
+
+export interface AssemblyProxyNoticeHandoff {
+  schema: "tenra-assembly.proxy-notice-handoff.v1";
+  exportedAt: string;
+  sourceApp: "assembly";
+  contentItemId: string;
+  title: string;
+  draftText: string;
+  sourceRegistryExportId?: string | undefined;
+  proxyShapeRequest: {
+    clientApp: "assembly";
+    surface: "internal-note";
+    profileId: "profile:default";
+    purpose: string;
+    draftText: string;
+    audience: string;
+    sourceArtifact: {
+      schema: string;
+      artifactId?: string | undefined;
+      exportedAt?: string | undefined;
+    };
+    hardConstraints: string[];
+    traceId: string;
   };
 }
 

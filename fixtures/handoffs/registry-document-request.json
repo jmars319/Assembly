@@ -1,5 +1,6 @@
 {
   "schema": "tenra-registry.assembly-document-request.v1",
+  "exportId": "registry-assembly-demo-cust-001",
   "exportedAt": "2026-05-06T17:30:00.000Z",
   "sourceApp": "registry",
   "organizationId": "org_demo_storage",
