@@ -1,0 +1,12 @@
+{
+  "schema": "tenra-registry.assembly-document-request.v1",
+  "exportedAt": "2026-05-06T17:30:00.000Z",
+  "sourceApp": "registry",
+  "organizationId": "org_demo_storage",
+  "customerId": "cust_001",
+  "assignmentId": "assign_001",
+  "documentType": "past-due-notice",
+  "title": "Past due notice for Acme Builders",
+  "contextMarkdown": "# Customer\nAcme Builders\n\n# Balance\n$240.00 past due\n\n# Rental\nUNIT-014 at South Yard",
+  "desiredOutput": "notice"
+}

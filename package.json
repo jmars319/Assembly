@@ -33,6 +33,7 @@
     "typecheck:desktop": "pnpm --filter @assembly/shared-types typecheck && pnpm --filter @assembly/domain typecheck && pnpm --filter @assembly/prompts typecheck && pnpm --filter desktopapp typecheck",
     "verify:web": "bash ./scripts/verify-web.sh",
     "verify:desktop": "bash ./scripts/verify-desktop.sh",
+    "verify:handoffs": "node ./scripts/validate-handoffs.mjs",
     "verify:all": "bash ./scripts/verify-all.sh",
     "doctor": "bash ./scripts/doctor.sh",
     "prisma:generate:web": "pnpm --filter webapp prisma:generate",

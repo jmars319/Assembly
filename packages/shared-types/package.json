@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./content": "./src/content.ts",
+    "./handoffs": "./src/handoffs.ts",
     "./store": "./src/store.ts",
     "./style": "./src/style.ts",
     "./workspace": "./src/workspace.ts"
