@@ -61,6 +61,7 @@ Builds:
 ```bash
 pnpm run build:web
 pnpm run build:desktop
+pnpm run launch:desktop
 pnpm run prisma:generate:web
 pnpm run prisma:validate:web
 ```

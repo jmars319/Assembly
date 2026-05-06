@@ -31,7 +31,7 @@ type AssemblyItem = {
 };
 
 type SidebarFilter = "active" | "approved" | "all";
-type HandoffKind = "scout" | "registry" | "derive";
+type HandoffKind = "scout" | "registry" | "derive" | "proxy";
 type WorkbenchExport = {
   exportedAt: string;
   items: AssemblyItem[];
@@ -140,6 +140,17 @@ const handoffTemplates: Record<
       "decision: State what Assembly should turn this into.\n" +
       "tradeoffs: Note what needs review before publishing or sending.\n" +
       "outcome: Define the draft, document, or task to produce."
+  },
+  proxy: {
+    label: "Proxy-shaped output",
+    source: "tenra Proxy handoff",
+    title: "Proxy output review",
+    type: "SYSTEMS_MEMO",
+    rawInput:
+      "context: Paste the Proxy shaped text, validation report, rewrite trace, and escalation decision.\n" +
+      "decision: State whether Assembly should turn it into publishable content, a reusable template, or an internal note.\n" +
+      "tradeoffs: Note any Guardrail review requirement before external delivery.\n" +
+      "outcome: Define the final artifact to produce."
   }
 };
 

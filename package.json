@@ -26,6 +26,7 @@
     "build:desktop": "pnpm --filter desktopapp tauri build",
     "package:desktop": "pnpm --filter desktopapp tauri build --bundles app",
     "install:desktop": "pnpm run package:desktop && bash ./scripts/install-desktop-app.sh",
+    "launch:desktop": "open -n \"/Applications/tenra Assembly.app\"",
     "lint": "pnpm --filter webapp lint && pnpm exec eslint --no-error-on-unmatched-pattern \"apps/desktopapp/**/*.{ts,tsx}\" \"apps/desktopapp/*.ts\" \"packages/**/*.{ts,tsx}\" \"scripts/**/*.{js,mjs,cjs,ts,mts,cts}\" eslint.config.mjs",
     "typecheck": "pnpm -r typecheck",
     "typecheck:web": "pnpm --filter @assembly/shared-types typecheck && pnpm --filter @assembly/domain typecheck && pnpm --filter @assembly/prompts typecheck && pnpm --filter webapp typecheck",
