@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { getPromotionIssuesForItem } from "@assembly/domain/content";
 import { buildInstructionBlock } from "@assembly/prompts/instructions";
 import {
@@ -31,6 +32,11 @@ type AssemblyItem = {
 
 type SidebarFilter = "active" | "approved" | "all";
 type HandoffKind = "scout" | "registry" | "derive";
+type WorkbenchExport = {
+  exportedAt: string;
+  items: AssemblyItem[];
+  schema: "tenra-assembly-desktop-workbench:v1";
+};
 
 const storageKey = "tenra-assembly-desktop-workbench:v1";
 
@@ -144,6 +150,8 @@ const createId = () =>
 
 const nowIso = () => new Date().toISOString();
 
+const todayForFilename = () => new Date().toISOString().slice(0, 10);
+
 const newItem = (): AssemblyItem => {
   const now = nowIso();
 
@@ -237,6 +245,36 @@ const loadItems = () => {
   return [newItem()];
 };
 
+const isAssemblyItem = (value: unknown): value is AssemblyItem => {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<AssemblyItem>;
+
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.title === "string" &&
+    typeof candidate.rawInput === "string" &&
+    typeof candidate.source === "string" &&
+    typeof candidate.createdAt === "string" &&
+    typeof candidate.updatedAt === "string" &&
+    contentTypes.includes(candidate.type as ContentType) &&
+    ["DRAFT", "READY", "APPROVED", "REJECTED", "ARCHIVED"].includes(candidate.status ?? "")
+  );
+};
+
+const parseWorkbenchImport = (input: unknown): AssemblyItem[] => {
+  const items = Array.isArray(input)
+    ? input
+    : input && typeof input === "object" && Array.isArray((input as Partial<WorkbenchExport>).items)
+      ? (input as Partial<WorkbenchExport>).items
+      : null;
+
+  if (!items || !items.every(isAssemblyItem)) {
+    throw new Error("Workbench JSON must contain Assembly desktop items.");
+  }
+
+  return items;
+};
+
 const formatShortDate = (iso: string) =>
   new Intl.DateTimeFormat(undefined, {
     month: "short",
@@ -275,6 +313,7 @@ const toMarkdown = (item: AssemblyItem) => {
 };
 
 function App() {
+  const importInputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<AssemblyItem[]>(loadItems);
   const [activeId, setActiveId] = useState(items[0]?.id ?? "");
   const [filter, setFilter] = useState<SidebarFilter>("active");
@@ -457,6 +496,41 @@ function App() {
     setNotice("Markdown export created.");
   };
 
+  const exportWorkbench = () => {
+    const payload: WorkbenchExport = {
+      exportedAt: nowIso(),
+      items,
+      schema: "tenra-assembly-desktop-workbench:v1",
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `tenra-assembly-workbench-${todayForFilename()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setNotice("Workbench export created.");
+  };
+
+  const importWorkbench = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) return;
+
+    try {
+      const nextItems = parseWorkbenchImport(JSON.parse(await file.text()));
+      setItems(nextItems);
+      setActiveId(nextItems[0]?.id ?? "");
+      setNotice(`Imported ${nextItems.length} workbench item(s).`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Workbench import failed.");
+    }
+  };
+
   return (
     <div className="shell">
       <aside className="sidebar">
@@ -485,11 +559,24 @@ function App() {
           <button type="button" onClick={createItem}>
             New
           </button>
+          <button type="button" onClick={exportWorkbench}>
+            Export Data
+          </button>
+          <button type="button" onClick={() => importInputRef.current?.click()}>
+            Import Data
+          </button>
           <select value={filter} onChange={(event) => setFilter(event.target.value as SidebarFilter)}>
             <option value="active">Active</option>
             <option value="approved">Approved</option>
             <option value="all">All</option>
           </select>
+          <input
+            ref={importInputRef}
+            className="hiddenFileInput"
+            type="file"
+            accept="application/json"
+            onChange={importWorkbench}
+          />
         </div>
 
         <section className="handoffPanel" aria-label="Suite handoff starters">

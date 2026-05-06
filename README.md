@@ -24,7 +24,7 @@ packages/
 
 What belongs where:
 - `apps/webapp`: current full product behavior, auth, Prisma, API routes, and hosted-web concerns
-- `apps/desktopapp`: local draft, review, approval, export, Tauri/Rust boundary work, and shared-package consumption
+- `apps/desktopapp`: local draft, review, approval, Markdown export, JSON workbench import/export, Tauri/Rust boundary work, and shared-package consumption
 - `packages/*`: low-risk shared logic that both app targets can consume safely
 
 ## Canonical commands
@@ -74,7 +74,7 @@ Notes:
 ## Current product split
 
 - `apps/webapp` remains the fuller cloud-backed implementation today.
-- `apps/desktopapp` is a usable local desktop workbench for manual content items, review gates, approvals, and Markdown export.
+- `apps/desktopapp` is a usable local desktop workbench for manual content items, review gates, approvals, Markdown export, and portable JSON workbench backup/restore.
 - `packages/*` hold the shared core that both targets can reuse now.
 
 ## Local AI Provider
