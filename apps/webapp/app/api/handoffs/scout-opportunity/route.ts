@@ -10,7 +10,25 @@ export async function POST(request: Request) {
     const auth = await requireApiContext("CONTENT_OPS");
     if (!auth.ok) return auth.response;
 
-    const handoff = scoutOpportunityToProjectNote(await request.json());
+    const body = await request.json();
+    const dryRun = Boolean(body?.dryRun);
+    const handoff = scoutOpportunityToProjectNote(dryRun ? body.payload : body);
+    if (dryRun) {
+      return NextResponse.json({
+        ok: true,
+        dryRun: true,
+        preview: {
+          title: handoff.title,
+          summary: handoff.summary,
+          project: handoff.project,
+          relatedSlugs: handoff.relatedSlugs,
+          topics: handoff.topics,
+          aiMeta: handoff.aiMeta
+        },
+        validation: { ok: true, errors: [], warnings: [] }
+      });
+    }
+
     const prisma = getPrismaClient();
     const project = await prisma.project.upsert({
       where: {

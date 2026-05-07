@@ -5,12 +5,14 @@ import type { ValidationIssue } from "@/lib/content/types";
 
 type ImportResponse = {
   ok?: boolean;
+  dryRun?: boolean;
   item?: {
     id: string;
     title?: string | null;
     status?: string | null;
     workspaceId?: string | null;
   };
+  preview?: ScoutOpportunityPreview;
   validation?: {
     errors?: ValidationIssue[];
     warnings?: ValidationIssue[];
@@ -19,6 +21,20 @@ type ImportResponse = {
 
 type HandoffStage = "idle" | "imported" | "drafted" | "reviewed" | "exported";
 type HandoffSource = "registry" | "scout";
+type ScoutOpportunityPreview = {
+  title: string;
+  summary: string;
+  project: {
+    name: string;
+    tag: string;
+  };
+  relatedSlugs: string[];
+  topics: string[];
+  aiMeta?: Record<string, unknown>;
+};
+type IncomingOpportunity = ScoutOpportunityPreview & {
+  previewedAt: string;
+};
 type ProxyAttempt = {
   attemptedAt?: string;
   endpoint?: string;
@@ -37,6 +53,8 @@ export default function RegistryHandoffInbox() {
   const [proxyHandoffJson, setProxyHandoffJson] = useState("");
   const [proxyDelivery, setProxyDelivery] = useState("");
   const [proxyAttempts, setProxyAttempts] = useState<ProxyAttempt[]>([]);
+  const [scoutPreview, setScoutPreview] = useState<ScoutOpportunityPreview | null>(null);
+  const [incomingOpportunities, setIncomingOpportunities] = useState<IncomingOpportunity[]>([]);
 
   const importHandoffRequest = async (source: HandoffSource) => {
     setBusy(true);
@@ -72,8 +90,46 @@ export default function RegistryHandoffInbox() {
       }
       setCreated(data.item ?? null);
       setWarnings(data.validation?.warnings ?? []);
+      if (source === "scout") {
+        setScoutPreview(null);
+      }
       setPayload("");
       setStage("drafted");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const previewScoutOpportunity = async () => {
+    setBusy(true);
+    setCreated(null);
+    setErrors([]);
+    setWarnings([]);
+    try {
+      let body: unknown;
+      try {
+        body = JSON.parse(payload);
+      } catch {
+        setErrors([{ code: "scout_json_invalid", message: "Scout opportunity JSON could not be parsed." }]);
+        setStage("idle");
+        return;
+      }
+      const response = await fetch("/api/handoffs/scout-opportunity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dryRun: true, payload: body }),
+      });
+      const data = (await response.json()) as ImportResponse;
+      const preview = data.preview;
+      if (!response.ok || !data.ok || !preview) {
+        setErrors(data.validation?.errors ?? [{ code: "scout_preview_failed", message: "Scout preview failed." }]);
+        setWarnings(data.validation?.warnings ?? []);
+        return;
+      }
+      setScoutPreview(preview);
+      setIncomingOpportunities((current) => [{ ...preview, previewedAt: new Date().toISOString() }, ...current].slice(0, 5));
+      setWarnings(data.validation?.warnings ?? []);
+      setStage("imported");
     } finally {
       setBusy(false);
     }
@@ -159,10 +215,18 @@ export default function RegistryHandoffInbox() {
           <button
             className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={busy || !payload.trim()}
+            onClick={() => void previewScoutOpportunity()}
+            type="button"
+          >
+            {busy ? "Previewing" : "Preview Scout"}
+          </button>
+          <button
+            className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={busy || !payload.trim() || !scoutPreview}
             onClick={() => void importHandoffRequest("scout")}
             type="button"
           >
-            {busy ? "Importing" : "Create Scout draft"}
+            Create reviewed Scout draft
           </button>
         </div>
       </div>
@@ -186,6 +250,30 @@ export default function RegistryHandoffInbox() {
         onChange={(event) => setPayload(event.target.value)}
         placeholder='{"schema":"tenra-registry.assembly-document-request.v1",...} or {"schema":"tenra-scout.opportunity-handoff.v1",...}'
       />
+      {scoutPreview ? (
+        <div className="mt-3 rounded-lg border border-sky-900 bg-sky-950/40 px-3 py-2 text-sm text-sky-100">
+          <div className="font-semibold">Scout opportunity ready for review</div>
+          <div>{scoutPreview.title}</div>
+          <div className="mt-1 text-sky-200/80">
+            Project: {scoutPreview.project.name} ({scoutPreview.project.tag})
+          </div>
+          <div className="mt-1 text-sky-200/80">{scoutPreview.summary}</div>
+        </div>
+      ) : null}
+      {incomingOpportunities.length ? (
+        <div className="mt-3 rounded-lg border border-slate-800 bg-slate-950/70 p-3 text-xs text-slate-300">
+          <div className="mb-2 font-semibold text-slate-100">Incoming Scout opportunities</div>
+          <div className="space-y-2">
+            {incomingOpportunities.map((opportunity) => (
+              <div className="rounded border border-slate-800 px-3 py-2" key={`${opportunity.project.tag}-${opportunity.previewedAt}`}>
+                <div className="font-semibold text-slate-100">{opportunity.title}</div>
+                <div>{opportunity.project.tag} · {new Date(opportunity.previewedAt).toLocaleString()}</div>
+                <div className="text-slate-500">{opportunity.relatedSlugs.slice(0, 2).join(", ")}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
       {created ? (
         <div className="mt-3 rounded-lg border border-emerald-900 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-100">
           Draft created: {created.title ?? created.id} ({created.status ?? "DRAFT"})
