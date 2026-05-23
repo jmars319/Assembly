@@ -14,7 +14,7 @@
     "@assembly/domain": "workspace:*",
     "@assembly/prompts": "workspace:*",
     "@assembly/shared-types": "workspace:*",
-    "@tauri-apps/api": "^2",
+    "@tauri-apps/api": "^2.11.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -22,7 +22,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.6.0",
-    "@tauri-apps/cli": "^2",
+    "@tauri-apps/cli": "^2.11.2",
     "typescript": "^5",
     "vite": "^7.0.4"
   }
